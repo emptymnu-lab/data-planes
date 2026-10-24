@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Flight Lab · Первый анализ данных</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body><main>
+<header><span class="eyebrow">PYTHON + JAVASCRIPT / УЧЕБНЫЙ ПРОЕКТ</span><h1>Flight Lab <span>↗</span></h1><p>Исследуй рейсы из Нью-Йорка: куда летят самолёты и насколько часто они опаздывают.</p></header>
+<aside><strong>Сначала познакомимся с данными.</strong> Здесь 2 400 реальных записей за 2013 год: первые 200 строк каждого месяца из nycflights13. Это учебная, нерепрезентативная выборка — по ней нельзя судить обо всех рейсах или качестве авиакомпаний.</aside>
+<section class="filters" aria-label="Фильтры"><label>Аэропорт вылета<select id="origin"><option value="">Все аэропорты</option></select></label><label>Авиакомпания (код)<select id="carrier"><option value="">Все компании</option></select></label><label>Месяц<select id="month"><option value="">Весь год</option></select></label><button id="reset">Сбросить</button></section>
+<p id="status" role="status" aria-live="polite">Загружаем данные…</p>
+<section class="metrics" aria-label="Показатели"><article><small>Рейсов в выборке</small><strong id="total">—</strong></article><article><small>Средняя задержка прилёта</small><strong id="delay">—</strong></article><article><small>Задержка больше 15 минут</small><strong id="percent">—</strong></article></section>
+<section class="charts"><article><h2>Задержки по авиакомпаниям</h2><p>Среднее время в минутах. Минус означает прилёт раньше расписания. n — число измерений.</p><div id="carriers"></div></article><article><h2>10 популярных направлений</h2><p>Коды аэропортов назначения и число рейсов в выбранных данных.</p><div id="destinations"></div></article></section>
+<section class="lesson"><h2>Попробуй как аналитик</h2><ol><li>Выбери аэропорт JFK и сравни среднюю задержку с LGA.</li><li>Поменяй месяц. Как изменились показатели и размер выборки?</li><li>Объясни, почему среднее может скрывать редкие сильные задержки.</li></ol><p>Пропуски исключены из расчёта задержек. Доля опозданий считается только среди записей с известной задержкой прилёта. Отсутствующее значение само по себе не доказывает отмену рейса.</p></section>
+<footer>Источник: <a href="https://cran.r-project.org/package=nycflights13">nycflights13</a> · данные о рейсах 2013 года · инструкции и упражнения — в README.md</footer>
+</main></body></html>
