@@ -7,14 +7,31 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 from analysis import load_flights, summarize
+from airports import load_airports, response_for, TYPES
 
 ROOT = Path(__file__).parent
 
 
 def make_handler(rows):
+    airports, metadata = load_airports()
     class Handler(SimpleHTTPRequestHandler):
         def do_GET(self):
             url = urlsplit(self.path)
+            if url.path in ('/api/airports', '/api/meta'):
+                if url.path == '/api/meta':
+                    result = {**metadata, 'types': TYPES, 'countries': sorted(
+                        [{'code': code, 'name': name} for code, name in metadata['countries'].items()],
+                        key=lambda row: row['name'])}
+                else:
+                    query = {key: values[0] for key, values in parse_qs(url.query).items()}
+                    result = response_for(airports, query)
+                body = json.dumps(result, ensure_ascii=False, allow_nan=False).encode()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Content-Length', str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
             if url.path == '/api/flights':
                 query = parse_qs(url.query)
                 selected = rows
@@ -36,12 +53,12 @@ def make_handler(rows):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Учебная аналитика авиарейсов')
+    parser = argparse.ArgumentParser(description='Flight Atlas — мировой справочник аэропортов')
     parser.add_argument('--port', type=int, default=8000)
     parser.add_argument('--host', default='127.0.0.1')
     args = parser.parse_args()
     server = ThreadingHTTPServer((args.host, args.port), make_handler(load_flights()))
-    print(f'Flight Lab: http://{args.host}:{args.port}', flush=True)
+    print(f'Flight Atlas: http://{args.host}:{args.port}', flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
