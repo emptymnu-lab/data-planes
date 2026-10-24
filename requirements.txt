@@ -1,0 +1,2 @@
+# No third-party dependencies: this project uses the Python standard library.
+# Kept for Render's default build command: pip install -r requirements.txt
